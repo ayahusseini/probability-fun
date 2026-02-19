@@ -15,6 +15,25 @@ def test_coin_flip_n_is_array(fair_coin):
     """Test that many fair coin flips return an array"""
     assert isinstance(fair_coin.flip_n(n = 12),np.ndarray) 
     
-def test_coin_flip_n_is_array(fair_coin):
-    """Test that many fair coin flips return an array"""
-    assert isinstance(fair_coin.flip_n(n = 12),np.ndarray) 
+def test_coin_flip_n_is_array_of_1s_and_0s(fair_coin):
+    """Test that many fair coin flips return an array of 1s and 0s"""
+    result = fair_coin.flip_n(n = 12)
+    assert all(x in [0, 1] for x in result)
+
+def test_two_different_rngs_give_different_results():
+    """Test that two different RNGs give different results"""
+    coin1 = Coin(bias = 0.5)
+    coin2 = Coin(bias = 0.5)
+    result1 = coin1.flip_n(n = 100)
+    result2 = coin2.flip_n(n = 100)
+    assert not np.array_equal(result1, result2)
+
+def test_same_rngs_give_same_results():
+    """Test that two different RNGs give different results"""
+    r1 = np.random.default_rng(seed=42)
+    r2 = np.random.default_rng(seed=42)
+    coin1 = Coin(bias = 0.5, rng = r1)
+    coin2 = Coin(bias = 0.5, rng = r2)
+    result1 = coin1.flip_n(n = 100)
+    result2 = coin2.flip_n(n = 100)
+    assert np.array_equal(result1, result2)
