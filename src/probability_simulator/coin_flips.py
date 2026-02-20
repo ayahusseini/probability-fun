@@ -1,6 +1,7 @@
 """Module for simulating coin flips"""
 
 import numpy as np
+import inspect
 
 from numbers import Real
 
@@ -31,7 +32,7 @@ class Coin:
                 Supplied bias ({type(bias)}) = {bias}"""
             )
 
-        elif isinstance(bias, float) and (not 0 <= bias <= 1):
+        elif isinstance(bias, Real) and (not 0 <= bias <= 1):
             raise ValueError(f"""Bias should be in the range [0,1]. 
                              Supplied bias = {bias}""")
 
@@ -43,10 +44,50 @@ class Coin:
         """Simulate flipping the coin n times"""
         return (self.rng.random(n) < self.bias).astype(int)
 
-    def __str__(self) -> str:
-        """String representation of the coin"""
-        return "H" if self.flip() == 1 else "T"
-
     def __repr__(self) -> str:
         """Official string representation of the coin"""
         return f"Coin(bias={self.bias})"
+
+
+class CoinExperiment:
+    """Class for running experiments"""
+    def __init__(self, coin: Coin, ntrials: int = 10000):
+        self.ntrials = 10000
+        self.coin = coin
+    
+    @classmethod
+    def create_seeded_experiment(cls, coin: Coin, ntrials: int = 10000, seed: int = 43):
+        """Create a reproducable experiment"""
+        seededrng = np.random.default_rng(seed = seed) 
+        coin.rng = seededrng
+        return cls(coin, ntrials)
+    
+    @staticmethod
+    def _validate_trial_function(run_function: callable):
+        """Raises an error if the run_function is invalid."""
+        if not callable(run_function):
+            raise TypeError(
+                f"run_function must be callable. Supplied type: {type(run_function)}"
+            )
+        
+        params = inspect.signature(run_function).parameters
+        if len(params) != 1:
+            raise TypeError(
+                f"""run_function must take one parameter (the Coin). 
+                Function params: {params}"""
+            ) 
+
+    def run_trials(self, trial_function: callable):
+        """Run multiple trials"""
+        self._validate_trial_function(trial_function)
+        
+        return  np.array(
+            [trial_function(self.coin) for _ in range(self.ntrials)]
+        )
+
+
+if __name__ == "__main__":
+    def r(x: int, y):
+        return 3
+    params = inspect.signature(r).parameters
+    print(params)

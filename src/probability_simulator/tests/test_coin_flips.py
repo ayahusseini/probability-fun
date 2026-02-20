@@ -9,10 +9,6 @@ def fair_coin():
     return Coin(bias=0.5)
 
 
-def test_text_representation(fair_coin):
-    assert f"{fair_coin}" in ["H", "T"]
-
-
 def test_coin_flip(fair_coin):
     """Test that a fair coin flip returns either 0 or 1"""
     assert fair_coin.flip() in [0, 1]
