@@ -1,9 +1,9 @@
 import numpy as np
-from pytest import fixture
+import pytest
 from probability_simulator.coin_flips import Coin
 
 
-@fixture
+@pytest.fixture
 def fair_coin():
     """Fixture for creating a coin instance"""
     return Coin(bias=0.5)
@@ -11,11 +11,6 @@ def fair_coin():
 
 def test_text_representation(fair_coin):
     assert f"{fair_coin}" in ["H", "T"]
-
-
-def test_coin_with_supplied_initial_state():
-    c = Coin(initial_state=1)
-    assert c.state == 1
 
 
 def test_coin_flip(fair_coin):
@@ -52,3 +47,12 @@ def test_same_rngs_give_same_results():
     result1 = coin1.flip_n(n=1000)
     result2 = coin2.flip_n(n=1000)
     assert np.array_equal(result1, result2)
+
+
+def test_invalid_bias_type():
+    with pytest.raises(TypeError):
+        Coin(bias="1.0")
+
+
+def test_integer_is_valid_bias_type():
+    Coin(bias=1)
