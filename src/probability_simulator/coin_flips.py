@@ -4,29 +4,11 @@ import numpy as np
 
 from numbers import Real
 
-
-class Coin:
-    """Class representing a coin"""
-
-    def __init__(self, bias=0.5, rng=None, initial_state=None) -> None:
-        """Initialize the coin with a given bias
-
-        bias: probability of landing on heads (1), default is 0.5 for a fair coin
-        """
-        self.bias = bias
-        self._validate_params(bias, initial_state)
-        self.rng = np.random.default_rng() if rng is None else rng
-        self.state = """Module for simulating coin flips"""
-
-
-import numpy as np
-
-
 class Coin:
     """Class representing a coin"""
 
     def __init__(self, bias=0.5, rng=None) -> None:
-        """Initialize the coin with a given bias
+        """Initialize the coin with a given bias. 
 
         bias: probability of landing on heads (1), default is 0.5 for a fair coin
         rng: random number generator - samples from Uniform(0, 1)
