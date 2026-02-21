@@ -5,11 +5,12 @@ import inspect
 
 from numbers import Real
 
+
 class Coin:
     """Class representing a coin"""
 
     def __init__(self, bias=0.5, rng=None) -> None:
-        """Initialize the coin with a given bias. 
+        """Initialize the coin with a given bias.
 
         bias: probability of landing on heads (1), default is 0.5 for a fair coin
         rng: random number generator - samples from Uniform(0, 1)
@@ -51,43 +52,36 @@ class Coin:
 
 class CoinExperiment:
     """Class for running experiments"""
+
     def __init__(self, coin: Coin, ntrials: int = 10000):
         self.ntrials = 10000
         self.coin = coin
-    
+
     @classmethod
     def create_seeded_experiment(cls, coin: Coin, ntrials: int = 10000, seed: int = 43):
         """Create a reproducable experiment"""
-        seededrng = np.random.default_rng(seed = seed) 
+        seededrng = np.random.default_rng(seed=seed)
         coin.rng = seededrng
         return cls(coin, ntrials)
-    
-    @staticmethod
-    def _validate_trial_function(run_function: callable):
-        """Raises an error if the run_function is invalid."""
-        if not callable(run_function):
-            raise TypeError(
-                f"run_function must be callable. Supplied type: {type(run_function)}"
-            )
-        
-        params = inspect.signature(run_function).parameters
-        if len(params) != 1:
-            raise TypeError(
-                f"""run_function must take one parameter (the Coin). 
-                Function params: {params}"""
-            ) 
 
     def run_trials(self, trial_function: callable):
         """Run multiple trials"""
-        self._validate_trial_function(trial_function)
-        
-        return  np.array(
-            [trial_function(self.coin) for _ in range(self.ntrials)]
-        )
+        # TODO validate the trial function
+
+        return np.array([trial_function(self.coin) for _ in range(self.ntrials)])
+
+    @staticmethod
+    def flips_until(stopping_condition: callable):
+        """Returns a function flips_until_stopping_condition
+        which flips a coin until some stopping condition is met
+        """
+        # TODO decide if this should be some sort of a wrapper
 
 
 if __name__ == "__main__":
+
     def r(x: int, y):
         return 3
+
     params = inspect.signature(r).parameters
     print(params)

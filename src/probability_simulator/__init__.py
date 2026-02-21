@@ -1,3 +1,3 @@
-from probability_simulator.coin_flips import Coin
+from probability_simulator.coin_flips import Coin, CoinExperiment
 
-__all__ = ['Coin']
+__all__ = ["Coin", "CoinExperiment"]
