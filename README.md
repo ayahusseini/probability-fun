@@ -41,6 +41,14 @@ After installation, you can import built modules in notebooks:
 from probability_simulator.coin_flips import Coin
 ```
 
+## Development 
+
+run `ruff` to format all files
+
+```sh
+uv run ruff format .
+```
+
 
 ## Testing
 
