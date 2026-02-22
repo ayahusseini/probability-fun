@@ -12,7 +12,8 @@ class Coin:
     def __init__(self, bias=0.5, rng=None) -> None:
         """Initialize the coin with a given bias.
 
-        bias: probability of landing on heads (1), default is 0.5 for a fair coin
+        bias: probability of landing on heads (1), default is 0.5 for a fair
+        coin
         rng: random number generator - samples from Uniform(0, 1)
         """
         self._validate_params(bias, rng)
@@ -23,8 +24,11 @@ class Coin:
     def _validate_params(bias, rng) -> None:
         """Raise an error if a parameter is invalid"""
 
-        if not ((rng is None) or (hasattr(rng, "random") and callable(rng.random))):
-            raise TypeError(f"""rng should be a random number generator with a .random() attribute.
+        if not (
+            (rng is None) or (hasattr(rng, "random") and callable(rng.random))
+        ):
+            raise TypeError(f"""rng should be a random number generator with a 
+                            .random() attribute.
                             Supplied rng {(type(rng))} = {rng}""")
 
         if not (isinstance(bias, Real) or (bias is None)):
@@ -58,7 +62,9 @@ class CoinExperiment:
         self.coin = coin
 
     @classmethod
-    def create_seeded_experiment(cls, coin: Coin, ntrials: int = 10000, seed: int = 43):
+    def create_seeded_experiment(
+        cls, coin: Coin, ntrials: int = 10000, seed: int = 43
+    ):
         """Create a reproducable experiment"""
         seededrng = np.random.default_rng(seed=seed)
         coin.rng = seededrng
@@ -68,7 +74,9 @@ class CoinExperiment:
         """Run multiple trials"""
         # TODO validate the trial function
 
-        return np.array([trial_function(self.coin) for _ in range(self.ntrials)])
+        return np.array(
+            [trial_function(self.coin) for _ in range(self.ntrials)]
+        )
 
     @staticmethod
     def flips_until(stopping_condition: callable):

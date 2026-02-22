@@ -8,7 +8,9 @@ def is_callable(fn: callable) -> bool:
     return callable(fn)
 
 
-def in_inclusive_range(count: int, mincount: int | None, maxcount: int | None) -> bool:
+def in_inclusive_range(
+    count: int, mincount: int | None, maxcount: int | None
+) -> bool:
     """
     Returns True if count is within some inclusive range.
     If either mincount or maxcount are None, then they are treated as open
