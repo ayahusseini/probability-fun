@@ -54,27 +54,37 @@ These enforce:
 - Lockfile validation via uv
 - Shell + workflow checks
 
-3. Run tests via
+### Testing 
+
+Run tests via:
 
 ```sh
 uv run pytest
 ```
 
+To run tests with coverage reporting:
+
+```sh
+uv run pytest --cov=probability_simulator --cov-report=term-missing
+```
+
+This will:
+- Display overall coverage percentage
+- Show which lines are not covered
+
 ## Files and Folders
 
+
+The directory structure:
 ```
-── notebooks
-├── pyproject.toml
-├── README.md
+├── notebooks
+│   └── foundational problems
 ├── src
 │   └── probability_simulator
-│       ├── __init__.py
-│       ├── coin_flips.py
-│       └── tests
-└── uv.lock
+├── tests
 ```
 
-### Directory structure
-- `src/`: This is the build path
-    - `probability_simulator`: A package containing most simulation code
+- `src/`: This is the build path.
+    - `probability_simulator`: A package containing most simulation code.
 - `notebooks/`: Jupyter notebooks demonstrating simulations, comparing Monte Carlo results to theoretical solutions.
+- `tests/` contains all tests on `src/` code. 
