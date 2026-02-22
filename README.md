@@ -1,13 +1,8 @@
 # Probability Fun
 
-A project to develop **intuition for probability** through Python code, simulations, and Monte Carlo experiments.
+A project to develop **intuition for probability** through Python simulations and Monte Carlo experiments.
 
-Via:
-- Implementing problems in code
-- Verifying closed-form solutions using Monte Carlo (see below)
-- Building reusable simulation modules for experiments
-
-### Monte Carlo ?
+## Monte Carlo ?
 
 From [the ELI5 subreddit](https://www.reddit.com/r/explainlikeimfive/comments/1cfsoyu/comment/l1r6aql/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button)
 
@@ -15,19 +10,22 @@ From [the ELI5 subreddit](https://www.reddit.com/r/explainlikeimfive/comments/1c
 
 >For example, lets say you wanted to figure out the area of a circle. What you would do is draw a square around the circle that touches the edges and generate random points in that square. For each point, you calculate whether it is in the circle or not and then count the ones that are in the circle and not in the circle. If you generate enough samples, you should get that about 78.5% of the points are in the circle, so you can estimate that the area of the circle is 78.5% the area of the square
 
-## Setup
 
-The recommended setup uses `uv`:
+# Setup 
+
+Reccomended setup is through [uv](https://docs.astral.sh/uv/getting-started/installation/). 
+
+## Quick Start (using notebooks)
+
+If you just want to use `notebooks/` to explore problems
 
 ```sh
 uv sync
 ```
 
-- This installs the packages in `src/` in editable mode.
-- Changes made to the code are immediately reflected in notebooks or scripts without reinstalling.
+You do not need the dev setup if you aren't intending to change `src/` code 
 
-Alternatively, you can set up a virtual environment manually and install the module:
-
+Alternatively, you can set up using `pip`:
 
 ```sh
 python -m venv venv
@@ -35,24 +33,28 @@ source venv/bin/activate  # or `venv\Scripts\activate` on Windows
 pip install -e .
 ```
 
-After installation, you can import built modules in notebooks:
+## Development setup 
 
-```python
-from probability_simulator.coin_flips import Coin
-```
+If you plan to modify code, run tests, or commit changes:
 
-## Development 
-
-run `ruff` to format all files
+1. Install dependencies 
 
 ```sh
-uv run ruff format .
+uv sync
 ```
 
+2. Install [pre-commit hooks](https://pre-commit.com/)
 
-## Testing
+```sh
+uv run pre-commit install
+```
 
-Run all tests using:
+These enforce:
+- Formatting via Ruff
+- Lockfile validation via uv
+- Shell + workflow checks
+
+3. Run tests via
 
 ```sh
 uv run pytest
