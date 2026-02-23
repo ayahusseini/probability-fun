@@ -1,4 +1,4 @@
-"""Module for simulating coin flips"""
+"""coin_flips.py : Module for simulating coin flips"""
 
 import numpy as np
 import inspect

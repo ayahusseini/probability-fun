@@ -8,7 +8,7 @@ A [Descriptor](https://docs.python.org/3/howto/descriptor.html) is a python obje
 - `__set__`
 - `__delete__`
 
-When a class attribute is defined using a Descriptor instance, we have pre-configured methods that get run whenever that attribute is then accessed or assigned. 
+When a class attribute is defined using a Descriptor instance, we have pre-configured methods that get run whenever that attribute is then accessed or assigned. In other words, they control how *external code* deals with our attributes
 
 
 ## Overview
@@ -72,3 +72,8 @@ Core Concepts:
     - `IntegerInRange(min, max)` 
     - `FunctionWithParams({...})`
     - ...
+
+Useful implementations
+1. `Interval` - which deals with string-representation bounded and unbounded intervals 
+
+Each of these `Field` objects also has a public `validate()` instance method, which runs the validation logic. This means that we can run validation in other contexts. 
