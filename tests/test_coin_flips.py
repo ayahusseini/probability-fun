@@ -47,7 +47,12 @@ def test_same_rngs_give_same_results():
 
 def test_invalid_bias_type():
     with pytest.raises(TypeError):
-        Coin(bias="1.0")
+        Coin(bias="abc")
+
+
+def test_invalid_bias_value():
+    with pytest.raises(ValueError):
+        Coin(bias=-1)
 
 
 def test_integer_is_valid_bias_type():

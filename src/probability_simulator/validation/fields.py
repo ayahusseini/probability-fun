@@ -125,6 +125,7 @@ class RealNumber(Field):
         """Attempt to convert a string to a real number. Returns the
         Preprocessed value. Doesn't raise an error as
         validation is handled elsewhere."""
+
         if isinstance(val, str):
             try:
                 return float(val.replace(" ", ""))
@@ -140,7 +141,6 @@ class RealNumber(Field):
         preprocessors: Iterable[Callable[[Any, str], Any]] | None = None,
         auto_convert: bool = True,
     ):
-
         if auto_convert:
             preprocessors = [self.preprocess_str_to_real] + (
                 preprocessors or []

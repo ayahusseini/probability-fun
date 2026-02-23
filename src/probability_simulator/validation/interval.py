@@ -1,7 +1,8 @@
-import math
 import re
-from .fields import RealNumber
+from .fields import RealNumber, Field
+from numbers import Real
 from enum import Enum
+from typing import Any
 
 
 class IntervalBracket(Enum):
@@ -43,8 +44,8 @@ class Interval:
     - Bounds may be finite numbers or ±inf.
     """
 
-    lower = RealNumber()
-    upper = RealNumber()
+    lower = RealNumber(allow_none=False, auto_convert=True)
+    upper = RealNumber(allow_none=False, auto_convert=True)
 
     @staticmethod
     def extract_pattern_components(interval_string: str) -> tuple[str]:
@@ -52,6 +53,11 @@ class Interval:
         components
         from an interval string pattern (e.g. "[1,2]")
         """
+
+        Field.validate_type(
+            interval_string, str, "interval_string", allow_none=False
+        )
+        interval_string = interval_string.replace(" ", "")
         pattern = re.compile(
             r"^\s*([\(\[])\s*([^,]+)\s*,\s*([^,\]]+)\s*([\)\]])\s*$"
         )
@@ -65,63 +71,45 @@ class Interval:
         return left_bracket, lower, upper, right_bracket
 
     def __init__(self, definition: str):
-        pattern_components = self.extract_pattern_components(definition)
 
-        self.left_closed = pattern_components[0] == "["
-        self.right_closed = pattern_components[-1] == "]"
+        left_br, left, right, right_br = self.extract_pattern_components(
+            definition
+        )
+        self.left_bracket = IntervalBracket(left_br)
+        self.right_bracket = IntervalBracket(right_br)
+        self.lower = left
+        self.upper = right
 
-        self.lower = self.parse_number(pattern_components[1])
-        self.upper = self.parse_number(pattern_components[2])
+        if self.lower > self.upper:
+            raise ValueError(
+                f"Lower bound {self.lower} cannot exceed upper bound",
+                f"{self.upper}",
+            )
 
-        if (
-            self.lower is not None
-            and self.upper is not None
-            and self.lower > self.upper
-        ):
-            raise ValueError("Lower bound must not exceed upper bound")
-
-    @staticmethod
-    def parse_number(number_txt: str):
-        """Parse a string representing a number and return
-        a
-        """
-        number_txt = number_txt.strip().lower()
-
-        if number_txt in {"-inf", "-infinity"}:
-            return -math.inf
-        if number_txt in {"inf", "+inf", "infinity"}:
-            return math.inf
-
-        try:
-            return float(number_txt)
-        except ValueError:
-            raise ValueError(f"Invalid numeric bound: {number_txt}")
-
-    def __contains__(self, value) -> bool:
-        if not isinstance(value):
-            return False
+    def __contains__(self, value: Any) -> bool:
+        # Validate input is a real number
+        Field.validate_type(value, Real, "value", allow_none=False)
 
         # Lower bound check
-        if self.lower is not None:
-            if self.left_closed:
-                if value < self.lower:
-                    return False
-            else:
-                if value <= self.lower:
-                    return False
+        if self.left_bracket.is_closed:
+            if value < self.lower:
+                return False
+        else:
+            if value <= self.lower:
+                return False
 
         # Upper bound check
-        if self.upper is not None:
-            if self.right_closed:
-                if value > self.upper:
-                    return False
-            else:
-                if value >= self.upper:
-                    return False
+        if self.right_bracket.is_closed:
+            if value > self.upper:
+                return False
+        else:
+            if value >= self.upper:
+                return False
 
         return True
 
     def __repr__(self):
-        left = "[" if self.left_closed else "("
-        right = "]" if self.right_closed else ")"
-        return f"{left}{self.lower}, {self.upper}{right}"
+        return (
+            f"{self.left_bracket.value}{self.lower}"
+            + f", {self.upper}{self.right_bracket.value}"
+        )
